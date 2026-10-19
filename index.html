@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sreshta's Tech Lab — The Computer Room</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--ink:#173A5E;--ink2:#0F5E8C;--sky:#0284C7;--sky2:#38BDF8;--skybg:#E0F2FE;--paper:#FFFFFF;--line:#BAE6FD;--gold:#F59E0B;--goldlt:#FDE68A;--soft:#5B7A94;--good:#0E9F6E}
+body{margin:0;font-family:'Nunito',sans-serif;color:var(--ink);min-height:100dvh;overflow-x:hidden;position:relative;background-color:#F0F9FF;background-image:linear-gradient(rgba(56,189,248,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.13) 1px,transparent 1px);background-size:26px 26px}
+h1,h2,h3,.baloo{font-family:'Baloo 2',cursive}
+.scr{display:none;max-width:480px;margin:0 auto;padding:12px 14px 92px;min-height:100dvh;position:relative;z-index:2}
+.scr.on{display:block}
+.topbar{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.topbar .tb{background:#fff;border:2px solid var(--line);color:var(--ink2);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;cursor:pointer;min-height:44px}
+.topbar .crumb{font-size:13px;font-weight:800;color:var(--soft)}
+.door{text-align:center;padding:8px 0 2px}
+h1.title{margin:6px 0 0;font-size:29px;color:var(--ink2);line-height:1.15}
+.tagline{font-weight:800;color:var(--sky);letter-spacing:.3px;margin:3px 0 8px}
+.gRow{display:flex;gap:12px;align-items:flex-end;margin:8px 0}
+.gWrap{flex:0 0 96px;cursor:pointer;animation:bob 3s ease-in-out infinite;text-align:center}
+.gWrap svg{width:96px;height:auto}
+.gWrap.small{flex-basis:64px;animation:none}
+.gWrap.small svg{width:64px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.bubble{position:relative;background:#fff;color:var(--ink);border:3px solid var(--sky2);border-radius:22px;padding:12px 14px;font-family:'Baloo 2',cursive;font-size:17px;line-height:1.35;flex:1;box-shadow:0 4px 0 rgba(2,132,199,.2)}
+.bubble:after{content:"";position:absolute;left:-13px;bottom:20px;width:20px;height:20px;background:#fff;border-left:3px solid var(--sky2);border-bottom:3px solid var(--sky2);transform:rotate(45deg);border-bottom-left-radius:6px}
+.card{background:var(--paper);border:1.5px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 4px 12px rgba(2,132,199,.12);margin:10px 0;color:var(--ink)}
+.card.skyy{background:linear-gradient(135deg,#0284C7,#38BDF8);color:#fff;border-color:#0284C7}
+.card.goldy{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-color:var(--goldlt)}
+.btn{display:block;width:100%;border:none;cursor:pointer;border-radius:999px;padding:13px 16px;font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;background:linear-gradient(180deg,#38BDF8,#0284C7);color:#fff;box-shadow:0 4px 0 #075985;margin:8px 0;min-height:50px}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #075985}
+.btn.gold{background:linear-gradient(180deg,#FBBF24,#F59E0B);color:#451A03;box-shadow:0 4px 0 #B45309}
+.btn.ghost{background:#fff;color:var(--ink2);border:2px solid var(--line);box-shadow:none}
+.btn:disabled{opacity:.45}
+.entry{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--line);border-radius:18px;padding:12px 14px;width:100%;cursor:pointer;font-family:'Baloo 2',cursive;font-size:19px;font-weight:800;color:var(--ink);margin:8px 0;text-align:left;min-height:58px}
+.entry small{display:block;font-family:'Nunito';font-size:12px;color:var(--soft);font-weight:700}
+.pinDots{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.pinDots span{width:18px;height:18px;border-radius:50%;border:3px solid var(--sky);background:transparent}
+.pinDots span.f{background:var(--sky)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:290px;margin:0 auto}
+.pad button{font-family:'Baloo 2';font-size:23px;font-weight:800;padding:12px 0;border-radius:16px;border:2px solid var(--line);background:#F0F9FF;color:#0F5E8C;cursor:pointer;min-height:54px}
+#pinMsg{text-align:center;font-weight:800;color:#B45309;min-height:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:8px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80px}
+.stat .n{font-family:'Baloo 2';font-size:20px;font-weight:800;color:var(--sky);line-height:1.12}
+.stat .l{font-size:11.5px;font-weight:800;color:var(--soft);line-height:1.2;margin-top:3px}
+.mrow{display:flex;align-items:center;gap:11px;background:#fff;border:2px solid var(--line);border-radius:16px;padding:10px 12px;margin:7px 0;cursor:pointer;width:100%;text-align:left;color:var(--ink);min-height:56px}
+.mrow .no{font-family:'Baloo 2';font-weight:800;background:var(--sky2);color:#fff;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex:0 0 34px;font-size:16px}
+.mrow .mt{font-family:'Baloo 2';font-weight:800;font-size:16.5px;line-height:1.15}
+.mrow .ms{font-size:12px;font-weight:800;color:var(--soft)}
+.mrow.lock{opacity:.6;cursor:default}
+.mrow.done .no{background:var(--gold);color:#451A03}
+.badge{display:inline-block;font-family:'Nunito';font-size:11px;font-weight:800;border-radius:999px;padding:2px 9px;background:var(--skybg);color:var(--ink2);border:1.5px solid var(--line);vertical-align:middle}
+.badge.big{background:#FEF3C7;border-color:var(--goldlt);color:#92400E}
+.stageCard{border:2px dashed #BAE6FD;border-radius:16px;padding:10px 12px;margin:7px 0;color:var(--soft);background:rgba(255,255,255,.6)}
+.stageCard .st1{font-family:'Baloo 2';font-weight:800;font-size:16px;color:var(--ink2)}
+.stageCard .sti{font-size:13.5px;font-weight:700;padding:2px 0}
+.opt{display:block;width:100%;background:#fff;color:var(--ink);border:2px solid var(--line);border-radius:14px;padding:12px;font-family:'Baloo 2';font-weight:800;font-size:16px;margin:7px 0;cursor:pointer;text-align:left;min-height:50px;line-height:1.3}
+.opt:active{transform:scale(.99)}
+.note{font-weight:800;color:var(--ink2);min-height:24px;text-align:center;font-size:15.5px}
+.machWrap{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:10px;box-shadow:0 4px 12px rgba(2,132,199,.12);margin:10px 0}
+.machWrap svg{width:100%;height:auto;display:block}
+.hs{cursor:pointer}
+.hs.ask{filter:drop-shadow(0 0 7px #F59E0B)}
+.hs.found{filter:drop-shadow(0 0 7px #0E9F6E)}
+.partLbl{font-family:'Baloo 2';font-weight:800;fill:var(--ink2)}
+.sortItem{display:inline-block;background:#fff;border:2px solid var(--sky2);color:var(--ink);border-radius:14px;padding:10px 14px;font-family:'Baloo 2';font-weight:800;font-size:16px;margin:5px;cursor:pointer;min-height:48px}
+.sortItem.sel{background:var(--skybg);border-color:var(--sky);box-shadow:0 0 0 3px rgba(56,189,248,.35)}
+.bin{border:2.5px dashed var(--sky2);border-radius:16px;padding:10px;margin:8px 0;background:rgba(224,242,254,.5);cursor:pointer;min-height:64px}
+.bin .bt{font-family:'Baloo 2';font-weight:800;font-size:17px;color:var(--ink2)}
+.bin .in{font-size:13.5px;font-weight:700;color:var(--soft)}
+.stepCard{display:block;width:100%;background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px;font-family:'Baloo 2';font-weight:800;font-size:16px;margin:7px 0;cursor:pointer;text-align:left;min-height:50px;color:var(--ink)}
+.stepCard.placed{border-color:var(--good);background:#ECFDF5;color:#065F46}
+.kbRow{display:flex;gap:5px;justify-content:center;margin:5px 0;flex-wrap:nowrap}
+.kbKey{flex:1;max-width:52px;min-height:50px;border-radius:10px;border:2px solid var(--line);background:#F0F9FF;color:#0F5E8C;font-family:'Baloo 2';font-weight:800;font-size:17px;cursor:pointer;padding:8px 0}
+.kbKey.wide{max-width:150px;flex:2}
+.kbKey:active{transform:scale(.96)}
+.dnav{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.dnav button{flex:1;min-width:100px;border:2px solid var(--line);background:#fff;color:var(--ink2);border-radius:999px;padding:9px 6px;font-family:'Baloo 2';font-weight:800;font-size:14.5px;cursor:pointer;min-height:48px}
+.dnav button.on{background:var(--sky);color:#fff;border-color:var(--sky)}
+.hrow{display:flex;justify-content:space-between;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:9px 12px;margin:6px 0;font-weight:700;font-size:14.5px}
+.hrow .hd{color:var(--soft);font-size:13px;text-align:right}
+input.txtin{width:100%;border:2px solid var(--line);border-radius:12px;padding:11px 12px;font-family:'Nunito';font-weight:700;font-size:16px;color:var(--ink);min-height:48px}
+.foot{font-size:12.5px;color:var(--soft);font-weight:700;text-align:center;margin-top:14px;line-height:1.5}
+#labBackBtn{position:fixed;left:12px;bottom:12px;z-index:60;display:none;align-items:center;gap:6px;background:#fff;border:2px solid var(--sky2);color:var(--ink2);border-radius:999px;padding:10px 16px;font-family:'Baloo 2';font-weight:800;font-size:15px;text-decoration:none;box-shadow:0 4px 10px rgba(2,132,199,.25);min-height:48px}
+.starBig{font-size:64px;text-align:center;line-height:1.1}
+.mapPart{transition:all .3s}
+</style>
+</head>
+<body>
+
+<a id="labBackBtn" href="https://raghuramsuda-sys.github.io/sreshta-tech-lab/">← Lab</a>
+
+<section class="scr" id="scr-access">
+  <div class="door">
+    <div style="font-size:40px;line-height:1">🔬</div>
+    <h1 class="title">The Computer Room</h1>
+    <p class="tagline">Sreshta's Tech Lab · Meet the Machine</p>
+  </div>
+  <div class="gRow">
+    <div class="gWrap" id="bitAccess"></div>
+    <div class="bubble" id="accessBubble">Hello, Sreshta! I am Bit. I just arrived at the Lab, and I have never seen a computer before. Will you show me the machine?</div>
+  </div>
+  <div class="machWrap" id="accessMach"></div>
+  <button class="entry" onclick="openPin('child')"><span style="font-size:28px">🧒</span><span>Sreshta<small>Tap here and type your PIN</small></span></button>
+  <button class="entry" onclick="openPin('parent')"><span style="font-size:28px">🔑</span><span>For Mom &amp; Dad<small>Parents' dashboard — your PIN opens it</small></span></button>
+  <p class="foot">A room of Sreshta's Tech Lab. Bit the robot lives in the Lab — here, you teach him the machine.</p>
+</section>
+
+<section class="scr" id="scr-pin">
+  <div class="topbar"><button class="tb" onclick="show('scr-access')">← Back</button><span class="crumb">The Computer Room</span></div>
+  <h2 class="baloo" id="pinTitle" style="text-align:center;color:var(--ink2)">PIN</h2>
+  <div class="pinDots" id="pinDots"><span></span><span></span><span></span><span></span></div>
+  <div id="pinMsg"></div>
+  <div class="pad">
+    <button onclick="pinKey('1')">1</button><button onclick="pinKey('2')">2</button><button onclick="pinKey('3')">3</button>
+    <button onclick="pinKey('4')">4</button><button onclick="pinKey('5')">5</button><button onclick="pinKey('6')">6</button>
+    <button onclick="pinKey('7')">7</button><button onclick="pinKey('8')">8</button><button onclick="pinKey('9')">9</button>
+    <button onclick="pinKey('C')">C</button><button onclick="pinKey('0')">0</button><button onclick="pinKey('⌫')">⌫</button>
+  </div>
+</section>
+
+<section class="scr" id="scr-home">
+  <div class="topbar"><span class="crumb">🔬 The Computer Room · Stage 1 — Meet the Machine</span></div>
+  <div class="gRow">
+    <div class="gWrap" id="bitHome" onclick="tapBit()"></div>
+    <div class="bubble" id="homeBubble">This is the Machine! Every part has a job. Teach me them all, Sreshta!</div>
+  </div>
+  <div class="machWrap" id="homeMach"></div>
+  <div class="card goldy" style="text-align:center;font-weight:700;font-size:14.5px;line-height:1.45">🤖 This is Bit. Bit lives here in the Lab. One day, in <b>Teach the Robot</b>, you will name and colour a Bit of your very own.</div>
+  <div class="grid3">
+    <div class="stat"><div class="n" id="stStars">⭐ 0</div><div class="l">STARS</div></div>
+    <div class="stat"><div class="n" id="stTitle" style="font-size:16px">Lab Visitor</div><div class="l">MY TITLE</div></div>
+    <div class="stat"><div class="n" id="stDone">0 / 10</div><div class="l">MISSIONS DONE</div></div>
+  </div>
+  <div id="continueCard"></div>
+  <div id="baseCard"></div>
+  <h3 style="color:var(--ink2);margin:14px 0 2px">Stage 1 — Meet the Machine</h3>
+  <div id="missionList"></div>
+  <h3 style="color:var(--ink2);margin:16px 0 2px">Stage 2 — The Connected Machine</h3>
+  <div id="stage2List"></div>
+  <button class="btn ghost" onclick="openPin('parent')">For Mom &amp; Dad</button>
+  <p class="foot">Everything you do here saves by itself, on this device.</p>
+</section>
+
+<section class="scr" id="scr-base">
+  <div class="topbar"><button class="tb" onclick="quitToHome()">⌂ Home</button><span class="crumb">First Steps · Show Bit the Machine</span></div>
+  <h2 class="baloo" style="color:var(--ink2);margin:4px 0">Show Bit the Machine</h2>
+  <div class="gRow">
+    <div class="gWrap small" id="bitBase"></div>
+    <div class="bubble" id="baseBubble">I see three machines — a computer, a tab and a phone! Show me the parts I call out.</div>
+  </div>
+  <div class="card" style="font-weight:700;font-size:14.5px;line-height:1.45">🏠 Do this with Mom or Dad on your real tab or laptop too — find each part there as you find it here.</div>
+  <div class="machWrap" id="baseMach"></div>
+  <div class="note" id="baseNote"></div>
+  <div id="baseDone"></div>
+</section>
+
+<section class="scr" id="scr-mission">
+  <div class="topbar"><button class="tb" onclick="quitToHome()">⌂ Home</button><span class="crumb" id="mCrumb">Mission</span></div>
+  <h2 class="baloo" id="mTitle" style="color:var(--ink2);margin:4px 0"></h2>
+  <div id="mBadge"></div>
+  <div id="mBigNote"></div>
+  <div class="gRow">
+    <div class="gWrap small" id="bitMission"></div>
+    <div class="bubble" id="mBubble"></div>
+  </div>
+  <div id="mBody"></div>
+  <div class="note" id="mNote"></div>
+  <div id="mFoot"></div>
+</section>
+
+<section class="scr" id="scr-dash">
+  <div class="topbar"><button class="tb" onclick="show('scr-access')">← Door</button><span class="crumb">For Mom &amp; Dad · The Computer Room</span></div>
+  <h2 class="baloo" style="color:var(--ink2);margin:4px 0">Parents' Dashboard</h2>
+  <div class="dnav">
+    <button id="dn-overview" onclick="dashGo('overview')">Overview</button>
+    <button id="dn-history" onclick="dashGo('history')">Mission History</button>
+    <button id="dn-map" onclick="dashGo('map')">Machine Map</button>
+    <button id="dn-controls" onclick="dashGo('controls')">Controls</button>
+  </div>
+  <div id="dashBody"></div>
+  <p class="foot">Progress is saved on this device only (on-device storage). It does not travel to other devices.</p>
+</section>
+
+<script>(function(){var b=document.getElementById("labBackBtn");if(!b)return;function upd(){var on=document.querySelector(".scr.on");var show=!on||on.id==="scr-access"||on.id==="scr-home";b.style.display=show?"inline-flex":"none";}upd();new MutationObserver(upd).observe(document.documentElement,{attributes:true,attributeFilter:["class"],subtree:true});})();</script>
+<script>
+"use strict";
+/* ================= helpers ================= */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+/* ================= Bit (standard sky-blue robot) ================= */
+function bitSVG() {
+  return '<svg viewBox="0 0 120 132" role="img" aria-label="Bit the robot">'
+    + '<line x1="60" y1="14" x2="60" y2="28" stroke="#0284C7" stroke-width="4" stroke-linecap="round"/>'
+    + '<circle cx="60" cy="10" r="6" fill="#F59E0B"/>'
+    + '<rect x="26" y="28" width="68" height="54" rx="16" fill="#7DD3FC" stroke="#0284C7" stroke-width="3"/>'
+    + '<rect x="20" y="46" width="7" height="18" rx="3.5" fill="#38BDF8" stroke="#0284C7" stroke-width="2"/>'
+    + '<rect x="93" y="46" width="7" height="18" rx="3.5" fill="#38BDF8" stroke="#0284C7" stroke-width="2"/>'
+    + '<circle cx="47" cy="52" r="6" fill="#fff"/><circle cx="47" cy="53" r="3" fill="#173A5E"/>'
+    + '<circle cx="73" cy="52" r="6" fill="#fff"/><circle cx="73" cy="53" r="3" fill="#173A5E"/>'
+    + '<path d="M48 68 Q60 77 72 68" stroke="#173A5E" stroke-width="3" fill="none" stroke-linecap="round"/>'
+    + '<circle cx="36" cy="63" r="4" fill="#FDA4AF" opacity=".8"/><circle cx="84" cy="63" r="4" fill="#FDA4AF" opacity=".8"/>'
+    + '<rect x="36" y="86" width="48" height="30" rx="10" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/>'
+    + '<circle cx="60" cy="101" r="6" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/>'
+    + '<path d="M36 92 Q22 100 26 110" stroke="#0284C7" stroke-width="6" fill="none" stroke-linecap="round"/>'
+    + '<path d="M84 92 Q98 100 94 110" stroke="#0284C7" stroke-width="6" fill="none" stroke-linecap="round"/>'
+    + '<rect x="42" y="118" width="12" height="9" rx="4" fill="#0284C7"/><rect x="66" y="118" width="12" height="9" rx="4" fill="#0284C7"/>'
+    + '</svg>';
+}
+
+/* ================= The Machine (pictured desktop computer) =================
+   Parts: screen, folder (on screen), tower, chip (in tower window), power,
+   speaker, keyboard, mouse. mode "base" adds a tablet + phone at the side. */
+function machineSVG(mode, lit) {
+  lit = lit || {};
+  const L = (p) => lit[p] ? ' fill="#FDE68A"' : '';
+  const Lc = (p) => lit[p] ? '#FDE68A' : '#E0F2FE';
+  let s = '<svg viewBox="0 0 360 250" role="img" aria-label="A desktop computer">';
+  /* desk */
+  s += '<rect x="6" y="222" width="348" height="10" rx="5" fill="#BAE6FD"/>';
+  /* tower */
+  s += '<g class="ph" data-part="tower"><rect x="252" y="86" width="62" height="136" rx="10" fill="' + Lc('tower') + '" stroke="#0284C7" stroke-width="3"/></g>';
+  s += '<g class="ph" data-part="chip"><rect x="264" y="102" width="38" height="38" rx="6" fill="' + Lc('chip') + '" stroke="#0284C7" stroke-width="2.5"/><rect x="274" y="112" width="18" height="18" rx="3" fill="#7DD3FC"/><path d="M270 102v-6M283 102v-6M296 102v-6M270 146v-6M283 146v-6M296 146v-6" stroke="#0284C7" stroke-width="2"/></g>';
+  s += '<text x="283" y="158" text-anchor="middle" font-size="10" class="partLbl">BRAIN</text>';
+  s += '<g class="ph" data-part="speaker">' + [0, 1, 2].map(i => '<circle cx="' + (272 + i * 11) + '" cy="176" r="3.2" fill="#0284C7"/>').join('') + '<rect x="264" y="166" width="38" height="20" rx="5" fill="none" stroke="#0284C7" stroke-width="2"/></g>';
+  s += '<text x="283" y="200" text-anchor="middle" font-size="10" class="partLbl">SOUND</text>';
+  s += '<g class="ph" data-part="power"><circle cx="283" cy="212" r="8" fill="' + Lc('power') + '" stroke="#F59E0B" stroke-width="2.5"/><path d="M283 206v6" stroke="#B45309" stroke-width="2.5" stroke-linecap="round"/><path d="M278.5 208.5a6 6 0 1 0 9 0" stroke="#B45309" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>';
+  /* monitor */
+  s += '<g class="ph" data-part="screen"><rect x="36" y="26" width="196" height="128" rx="12" fill="#173A5E" stroke="#0284C7" stroke-width="3"/><rect x="46" y="36" width="176" height="108" rx="8" fill="' + Lc('screen') + '"/></g>';
+  /* folder on the screen */
+  s += '<g class="ph" data-part="folder"><path d="M64 116 v-30 a6 6 0 0 1 6-6 h26 l8 8 h44 a6 6 0 0 1 6 6 v22 a6 6 0 0 1-6 6 h-78 a6 6 0 0 1-6-6z" fill="' + Lc('folder') + '" stroke="#F59E0B" stroke-width="2.5"/></g>';
+  s += '<text x="109" y="136" text-anchor="middle" font-size="10" class="partLbl">MY FOLDER</text>';
+  s += '<circle cx="196" cy="58" r="11" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/><path d="M196 50v4M196 62v4M188 58h4M200 58h4" stroke="#B45309" stroke-width="2" stroke-linecap="round"/>';
+  /* stand */
+  s += '<rect x="124" y="154" width="20" height="18" fill="#7DD3FC" stroke="#0284C7" stroke-width="2"/><rect x="98" y="172" width="72" height="8" rx="4" fill="#7DD3FC" stroke="#0284C7" stroke-width="2"/>';
+  /* keyboard */
+  s += '<g class="ph" data-part="keyboard"><rect x="52" y="190" width="150" height="34" rx="8" fill="' + Lc('keyboard') + '" stroke="#0284C7" stroke-width="3"/>';
+  for (let r = 0; r < 2; r++) for (let c = 0; c < 7; c++) s += '<rect x="' + (62 + c * 19) + '" y="' + (197 + r * 12) + '" width="13" height="8" rx="2" fill="#7DD3FC"/>';
+  s += '<rect x="92" y="215" width="70" height="6" rx="3" fill="#7DD3FC"/></g>';
+  /* mouse */
+  s += '<g class="ph" data-part="mouse"><ellipse cx="226" cy="206" rx="13" ry="17" fill="' + Lc('mouse') + '" stroke="#0284C7" stroke-width="3"/><path d="M226 189 q4 -12 18 -14" stroke="#0284C7" stroke-width="2.5" fill="none"/><line x1="226" y1="192" x2="226" y2="204" stroke="#0284C7" stroke-width="2"/></g>';
+  if (mode === 'base') {
+    /* tablet */
+    s += '<g class="ph" data-part="tablet"><rect x="318" y="26" width="38" height="54" rx="7" fill="#173A5E" stroke="#0284C7" stroke-width="2.5"/><rect x="323" y="32" width="28" height="42" rx="4" fill="#BAE6FD"/><text x="337" y="58" text-anchor="middle" font-size="13">👆</text></g>';
+    s += '<text x="337" y="94" text-anchor="middle" font-size="10" class="partLbl">TAB</text>';
+    /* phone */
+    s += '<g class="ph" data-part="phone"><rect x="322" y="120" width="30" height="50" rx="7" fill="#173A5E" stroke="#0284C7" stroke-width="2.5"/><rect x="326" y="126" width="22" height="34" rx="3" fill="#BAE6FD"/></g>';
+    s += '<text x="337" y="184" text-anchor="middle" font-size="10" class="partLbl">PHONE</text>';
+  }
+  s += '</svg>';
+  return s;
+}
+/* hotspot overlay version: wrap parts in clickable groups */
+function machineHotspots(mode) {
+  return machineSVG(mode).replace(/class="ph" data-part="([a-z]+)"/g, 'class="hs" data-part="$1"');
+}
+</script>
+<script>
+"use strict";
+/* ================= content data ================= */
+const PART_INFO = {
+  screen:  { label: "Screen",       job: "shows pictures, words and everything the computer does" },
+  keyboard:{ label: "Keyboard",     job: "types letters, numbers and words" },
+  mouse:   { label: "Mouse",        job: "moves the pointer and clicks to choose things" },
+  tower:   { label: "Brain Box",    job: "holds the brain chip and the memory safely inside" },
+  chip:    { label: "Brain Chip",   job: "thinks and works out everything, super fast" },
+  power:   { label: "Power Button", job: "turns the machine on" },
+  speaker: { label: "Speaker",      job: "makes the sounds and music" },
+  folder:  { label: "Folder",       job: "keeps files in tidy order" },
+  tablet:  { label: "Touch Screen", job: "you touch it with a finger to choose things" }
+};
+const STAGE2_TITLES = ["What Is the Internet?", "How a Page Travels", "Browser, the Window", "Search, the Finder", "Passwords Are Keys", "Photos Live Somewhere", "Apps and Programs", "When Something Freezes", "Kind and Careful Online", "Computer Wing Test Day"];
+const BASE_TARGETS = [
+  { part: "screen",   ask: "the SCREEN — the big part that shows pictures" },
+  { part: "keyboard", ask: "the KEYBOARD — full of letter keys" },
+  { part: "mouse",    ask: "the MOUSE — the small round helper beside the keyboard" },
+  { part: "power",    ask: "the POWER BUTTON — the round button on the Brain Box" },
+  { part: "speaker",  ask: "the SPEAKER — the dots that make sound, on the Brain Box" },
+  { part: "tablet",   ask: "the TAB — touch its screen with a finger" }
+];
+const MISSIONS = [
+{ title: "Parts of a Computer", badge: "phone",
+  story: "Bit is looking at the Machine with big eyes. “So many parts! What are they all called?” Teach Bit the names, one by one.",
+  real: "On your real machine at home, point to the screen, the keyboard and the mouse, and say their names out loud.",
+  acts: [
+    { t: "tap", targets: ["screen", "keyboard", "mouse", "tower", "power"] },
+    { t: "quiz", qs: [
+      { q: "Which part shows the pictures and words?", opts: ["Screen", "Keyboard", "Speaker"], a: 0 },
+      { q: "Which part types letters?", opts: ["Mouse", "Keyboard", "Power Button"], a: 1 } ] } ] },
+{ title: "Brain of the Computer", badge: "phone",
+  story: "Inside the Brain Box hides a tiny chip. It is the thinking part of the whole machine! Bit wants to learn what it does.",
+  real: "The brain chip is tiny — smaller than a postage stamp. Ask Mom or Dad about the chip inside a phone too.",
+  acts: [
+    { t: "teach", rounds: [
+      { name: "Brain Chip", icon: "🔲", claim: "I think and work out everything, super fast!", isTrue: true, fix: "I think and work out everything, super fast!" },
+      { name: "Mouse", icon: "🖱️", claim: "I think and work out everything, super fast!", isTrue: false, fix: "I move the pointer and click to choose things." },
+      { name: "Brain Box", icon: "🗄️", claim: "I keep the brain chip and the memory safe inside me.", isTrue: true, fix: "I keep the brain chip and the memory safe inside me." } ] },
+    { t: "quiz", qs: [
+      { q: "Where does the brain chip live?", opts: ["Inside the Brain Box", "Inside the mouse", "Under the desk"], a: 0 } ] } ] },
+{ title: "Memory: Short and Long", badge: "phone",
+  story: "The machine remembers in two ways. Its DESK holds what it is using right now. Its CUPBOARD keeps things safe for later. Bit keeps mixing them up!",
+  real: "Save a drawing into a folder at home. Now it lives in the long memory — the cupboard!",
+  acts: [
+    { t: "quiz", qs: [
+      { q: "You are playing a game right now. Where is it — desk or cupboard?", opts: ["On the desk (short memory)", "In the cupboard (long memory)"], a: 0 },
+      { q: "You saved your drawing in a folder yesterday. Where is it now?", opts: ["On the desk (short memory)", "In the cupboard (long memory)"], a: 1 } ] },
+    { t: "sort", prompt: "Help Bit tidy up! Tap a card, then tap the desk or the cupboard it belongs to.",
+      bins: [ { id: "short", label: "🖥️ Desk — using now", icon: "🖥️" }, { id: "long", label: "🗄️ Cupboard — kept safe", icon: "🗄️" } ],
+      items: [
+        { id: "i1", label: "🎮 A game I am playing right now", bin: "short" },
+        { id: "i2", label: "🎨 My saved drawing", bin: "long" },
+        { id: "i3", label: "🎵 A song playing right now", bin: "short" },
+        { id: "i4", label: "📷 Photos kept in a folder", bin: "long" },
+        { id: "i5", label: "✏️ A story I am typing now", bin: "short" },
+        { id: "i6", label: "📄 My finished homework file", bin: "long" } ] } ] },
+{ title: "Screen, Sound, Power", badge: "phone",
+  story: "Bit pressed something and the machine went quiet and dark! Let us learn the three parts that wake it, show it and sing it.",
+  real: "With Mom or Dad, find the power button and the speaker on your real machine. Just look — no pressing needed.",
+  acts: [
+    { t: "tap", targets: ["screen", "speaker", "power"] },
+    { t: "quiz", qs: [
+      { q: "You want to hear a song. Which part makes the sound?", opts: ["Speaker", "Keyboard", "Mouse"], a: 0 },
+      { q: "Which part turns the machine on?", opts: ["The screen", "The power button", "A folder"], a: 1 } ] } ] },
+{ title: "Mouse and Touch", badge: "phone",
+  story: "Some machines listen to a mouse. Some listen to your finger! Bit wants to know how each one chooses things.",
+  real: "Practise one gentle tap and one slow swipe on a real tab or phone, with Mom or Dad beside you.",
+  acts: [
+    { t: "teach", rounds: [
+      { name: "Mouse", icon: "🖱️", claim: "I move the pointer on the screen.", isTrue: true, fix: "I move the pointer on the screen." },
+      { name: "Mouse", icon: "🖱️", claim: "I type letters all by myself.", isTrue: false, fix: "I move the pointer and click to choose things." },
+      { name: "Touch Screen", icon: "👆", claim: "You touch me with a finger to choose things.", isTrue: true, fix: "You touch me with a finger to choose things." } ] },
+    { t: "quiz", qs: [
+      { q: "On a tab, how do you choose a picture?", opts: ["Tap it with a finger", "Shout at the tab", "Shake the tab hard"], a: 0 } ] } ] },
+{ title: "The Keyboard Tour", badge: "big",
+  story: "So many keys! Each key is a tiny door to a letter. Bit will call out keys — can your fingers find them?",
+  real: "On a real keyboard, rest your fingers on A S D F and J K L. That is the home row — where fingers live.",
+  acts: [
+    { t: "keys", seq: ["A", "S", "D", "F", "J", "K", "L", "Space", "Enter"] },
+    { t: "quiz", qs: [
+      { q: "Which key makes a space between words?", opts: ["The space bar", "The letter A", "The power button"], a: 0 },
+      { q: "Which row do your fingers rest on?", opts: ["The home row", "The top row only", "No row at all"], a: 0 } ] } ] },
+{ title: "Click, Tap, Drag", badge: "phone",
+  story: "Files can travel! You pick one up, carry it across the screen, and drop it into a folder. Bit calls it the Great File Carry.",
+  real: "On a real machine, drag one picture into a folder — slowly, like carrying a full cup of water.",
+  acts: [
+    { t: "order", prompt: "Put the Great File Carry in order. Tap the steps one by one.",
+      steps: ["Press and hold the file", "Move slowly to the folder", "Let go — drop it in!", "Ta-da! The file has moved"] },
+    { t: "teach", rounds: [
+      { name: "Dragging", icon: "🖱️", claim: "Dragging means press, hold, move, and let go.", isTrue: true, fix: "Dragging means press, hold, move, and let go." } ] },
+    { t: "quiz", qs: [
+      { q: "To drag a file, what do you do first?", opts: ["Press and hold it", "Let go at once", "Close your eyes"], a: 0 } ] } ] },
+{ title: "Files Are Boxes", badge: "phone",
+  story: "A file is a little box. One box keeps a photo, one keeps a story, one keeps a song. Bit's boxes are all mixed up — help him sort them!",
+  real: "At home, save one thing — a photo or a drawing — and remember the name of its file.",
+  acts: [
+    { t: "sort", prompt: "Tap a box, then tap the folder shelf it belongs to.",
+      bins: [ { id: "photos", label: "📷 Photos Shelf", icon: "📷" }, { id: "stories", label: "📝 Stories Shelf", icon: "📝" }, { id: "songs", label: "🎵 Songs Shelf", icon: "🎵" } ],
+      items: [
+        { id: "f1", label: "🌳 A photo of a mango tree", bin: "photos" },
+        { id: "f2", label: "🎂 A birthday photo", bin: "photos" },
+        { id: "f3", label: "🐶 The story I typed about a puppy", bin: "stories" },
+        { id: "f4", label: "💌 A letter I wrote", bin: "stories" },
+        { id: "f5", label: "🎂 A birthday song", bin: "songs" },
+        { id: "f6", label: "🎶 A rhymes song", bin: "songs" } ] },
+    { t: "quiz", qs: [
+      { q: "A file is like…", opts: ["A box that keeps one thing safe", "A kind of fruit", "A pair of shoes"], a: 0 } ] } ] },
+{ title: "Folders Keep Order", badge: "phone",
+  story: "Bit made a big pile of files. Photos on songs, stories under photos! Folders to the rescue — tidy shelves for every kind of file.",
+  real: "Make one tidy folder at home with Mom or Dad, and put two files inside it.",
+  acts: [
+    { t: "sort", prompt: "Tap a file, then tap its tidy folder.",
+      bins: [ { id: "photos", label: "📷 Photos Folder", icon: "📷" }, { id: "stories", label: "📝 Stories Folder", icon: "📝" }, { id: "songs", label: "🎵 Songs Folder", icon: "🎵" } ],
+      items: [
+        { id: "g1", label: "🐶 A photo of my puppy", bin: "photos" },
+        { id: "g2", label: "💃 A song for dancing", bin: "songs" },
+        { id: "g3", label: "🌧️ My poem about rain", bin: "stories" },
+        { id: "g4", label: "🏖️ A photo of the beach", bin: "photos" },
+        { id: "g5", label: "🌙 A bedtime story I wrote", bin: "stories" },
+        { id: "g6", label: "🥁 A drum song", bin: "songs" } ] },
+    { t: "quiz", qs: [
+      { q: "Why do we keep folders?", opts: ["So we can find things quickly", "So files can hide forever", "Only for decoration"], a: 0 } ] } ] },
+{ title: "Machine Manners", badge: "phone",
+  story: "Machines are strong, but they like gentle friends. Last lesson, Sreshta — teach Bit how a kind computer friend behaves.",
+  real: "Show Mom or Dad your tall-tree sitting and your gentle hands on the real machine.",
+  acts: [
+    { t: "quiz", qs: [
+      { q: "Before touching the machine, your hands should be…", opts: ["Clean and dry", "Covered in jam", "Wet from washing up"], a: 0 },
+      { q: "Where should your drink stay?", opts: ["Far away from the machine", "On top of the keyboard", "Right beside the mouse"], a: 0 },
+      { q: "How do we sit at the machine?", opts: ["Tall like a tree", "Curled up on the chair all day", "Lying across the desk"], a: 0 },
+      { q: "When you finish your work, what is the kind way?", opts: ["Save my work, and shut down with a grown-up", "Run away at once", "Pull the plug out quickly"], a: 0 } ] },
+    { t: "teach", rounds: [
+      { name: "Bit", icon: "🤖", claim: "Gentle hands and clean hands keep machines happy!", isTrue: true, fix: "Gentle hands and clean hands keep machines happy!" } ] } ] }
+];
+const BIT_LINES = [
+  "This is the Machine! Every part has a job. Teach me them all, Sreshta!",
+  "Did you know? The brain chip is smaller than a postage stamp!",
+  "I love the Great File Carry. Press, hold, move… let go!",
+  "Folders are like tidy shelves. Everything in its place!",
+  "Gentle hands, clean hands — that is the Machine Manners way."
+];
+</script>
+<script>
+"use strict";
+/* ================= state ================= */
+const LS_KEY = "techcomp_v1";
+function freshState() { return { v: 1, baseline: null, missions: {}, run: null, stash: {}, brun: null, reward: "" }; }
+let S = freshState();
+try { const raw = localStorage.getItem(LS_KEY); if (raw) { const p = JSON.parse(raw); if (p && p.v === 1) { const f = freshState(); Object.assign(f, p); S = f; } } } catch (e) {}
+function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {} }
+function todayStr() { try { return new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }); } catch (e) { return ""; } }
+function stars() { return Object.values(S.missions).filter(m => m && m.done).length; }
+function titleFor(n) { if (n >= 18) return "Computer Guide"; if (n >= 7) return "Part Finder"; if (n >= 1) return "Machine Friend"; return "Lab Visitor"; }
+window.MISSIONS = MISSIONS; window.STAGE2_TITLES = STAGE2_TITLES; window.BASE_TARGETS = BASE_TARGETS;
+window.__S = function () { return S; };
+
+/* ================= screens & PIN ================= */
+function show(id) { $$(".scr").forEach(x => x.classList.toggle("on", x.id === id)); window.scrollTo(0, 0); }
+let pinRole = "child", pinBuf = "";
+function openPin(role) { pinRole = role; pinBuf = ""; $("#pinMsg").textContent = ""; $("#pinTitle").textContent = role === "child" ? "Sreshta's PIN" : "Parents' PIN"; drawDots(); show("scr-pin"); }
+function drawDots() { $$("#pinDots span").forEach((s, i) => s.classList.toggle("f", i < pinBuf.length)); }
+function pinKey(k) {
+  if (k === "C") pinBuf = "";
+  else if (k === "⌫") pinBuf = pinBuf.slice(0, -1);
+  else if (pinBuf.length < 4) pinBuf += k;
+  drawDots();
+  if (pinBuf.length === 4) {
+    const want = pinRole === "child" ? "2017" : "2208";
+    if (pinBuf === want) { pinBuf = ""; if (pinRole === "child") { renderHome(); show("scr-home"); } else { renderDash(); dashGo("overview"); show("scr-dash"); } }
+    else { $("#pinMsg").textContent = "That PIN did not match. Try again, slowly."; pinBuf = ""; drawDots(); }
+  }
+}
+function goHome() { renderHome(); show("scr-home"); }
+function quitToHome() { save(); goHome(); }
+let bitTapIx = 0;
+function tapBit() { const b = $("#homeBubble"); if (b) { b.textContent = BIT_LINES[bitTapIx % BIT_LINES.length]; bitTapIx++; } }
+
+/* ================= home ================= */
+function mDone(i) { const m = S.missions[i]; return !!(m && m.done); }
+function mUnlocked(i) { if (!S.baseline) return false; if (i === 0) return true; return mDone(i - 1); }
+function renderHome() {
+  $("#bitHome").innerHTML = bitSVG();
+  $("#homeMach").innerHTML = machineSVG("desk");
+  $("#stStars").textContent = "⭐ " + stars();
+  $("#stTitle").textContent = titleFor(stars());
+  $("#stDone").textContent = stars() + " / 10";
+  const bc = $("#baseCard");
+  if (!S.baseline) {
+    bc.innerHTML = '<div class="card goldy"><b class="baloo" style="font-size:17px">⭐ First Steps — Show Bit the Machine</b><div style="font-weight:700;font-size:14.5px;margin:4px 0 8px">Bit is brand new here. Show him the parts of the machine — this opens Mission 1.</div><button class="btn gold" onclick="startBaseline()">' + (S.brun ? "▶ Continue Showing Bit" : "▶ Start — Show Bit the Machine") + '</button></div>';
+  } else {
+    bc.innerHTML = '<div class="card goldy"><b class="baloo" style="font-size:17px">⭐ First Steps — done!</b><div style="font-weight:700;font-size:14.5px">You showed Bit the machine on ' + esc(S.baseline.date || "") + '. This star step stays forever.</div></div>';
+  }
+  const cc = $("#continueCard");
+  if (S.run && !mDone(S.run.mid)) {
+    cc.innerHTML = '<div class="card skyy"><b class="baloo" style="font-size:17px">▶ Continue: ' + esc(MISSIONS[S.run.mid].title) + '</b><div style="font-weight:700;font-size:14.5px;margin:4px 0 8px">You left this mission in the middle — it saved itself. Pick it up right where you stopped.</div><button class="btn" style="background:#fff;color:var(--ink2);box-shadow:none" onclick="startMission(' + S.run.mid + ')">▶ Continue Mission ' + (S.run.mid + 1) + '</button></div>';
+  } else cc.innerHTML = "";
+  const ml = $("#missionList"); ml.innerHTML = "";
+  MISSIONS.forEach((m, i) => {
+    const d = mDone(i), u = mUnlocked(i);
+    const row = document.createElement("button");
+    row.className = "mrow" + (d ? " done" : "") + (u ? "" : " lock");
+    row.id = "mrow-" + i;
+    row.innerHTML = '<span class="no">' + (d ? "⭐" : (i + 1)) + '</span><span style="flex:1"><span class="mt">' + esc(m.title) + '</span><br><span class="ms">' + (d ? "Done — tap to play again" : (u ? "Tap to start" : (S.baseline ? "Finish the mission before this one first" : "First Steps opens this mission"))) + '</span></span><span class="badge' + (m.badge === "big" ? " big" : "") + '">' + (m.badge === "big" ? "💻 Big screen" : "📱 Phone-fine") + '</span>';
+    if (u) row.onclick = () => startMission(i);
+    ml.appendChild(row);
+  });
+  const s2 = $("#stage2List");
+  s2.innerHTML = '<div class="stageCard"><div class="st1">Coming soon — Stage 2</div>' + STAGE2_TITLES.map((t, i) => '<div class="sti">' + (11 + i) + '. ' + esc(t) + '</div>').join("") + '</div>';
+}
+
+/* ================= baseline ================= */
+function startBaseline() { if (S.baseline) { goHome(); return; } if (!S.brun) S.brun = { bi: 0 }; save(); renderBase(); show("scr-base"); }
+function renderBase() {
+  $("#bitBase").innerHTML = bitSVG();
+  const host = $("#baseMach");
+  host.innerHTML = machineHotspots("base");
+  const t = BASE_TARGETS[S.brun.bi];
+  if (t) {
+    $("#baseBubble").textContent = "Show me… " + t.ask + "!";
+    $("#baseNote").textContent = "Part " + (S.brun.bi + 1) + " of " + BASE_TARGETS.length + " — tap it on the picture.";
+    const g = host.querySelector('.hs[data-part="' + t.part + '"]'); if (g) g.classList.add("ask");
+  }
+  host.onclick = (ev) => {
+    const g = ev.target.closest("[data-part]"); if (!g || !S.brun) return;
+    const part = g.getAttribute("data-part");
+    const cur = BASE_TARGETS[S.brun.bi]; if (!cur) return;
+    if (part === cur.part) {
+      S.brun.bi++; save();
+      if (S.brun.bi >= BASE_TARGETS.length) {
+        S.baseline = { done: true, date: todayStr() }; S.brun = null; save();
+        $("#baseBubble").textContent = "You found every part! I know the machine's face now. Missions are open — let us go!";
+        $("#baseNote").textContent = "";
+        host.innerHTML = machineSVG("base");
+        $("#baseDone").innerHTML = '<div class="card goldy" style="text-align:center"><div class="starBig">⭐</div><b class="baloo" style="font-size:19px">First Steps complete!</b><div style="font-weight:700;font-size:14.5px;margin:6px 0">Mission 1 is open now.</div><button class="btn gold" onclick="goHome()">⌂ Back to My Room</button></div>';
+      } else {
+        $("#baseBubble").textContent = "Yes! That is " + cur.ask.split("—")[0].trim() + ". You are a kind teacher!";
+        renderBase();
+      }
+    } else {
+      const lbl = part === "phone" ? "the phone" : ((PART_INFO[part] || {}).label ? "the " + PART_INFO[part].label : "that part");
+      $("#baseNote").textContent = "Good exploring! That is " + lbl + ". Bit is looking for " + cur.ask + ".";
+    }
+  };
+}
+
+/* ================= mission engine ================= */
+let curMid = -1;
+let pendingNote = "";
+function startMission(i) {
+  if (!mUnlocked(i)) return;
+  curMid = i;
+  if (S.run && S.run.mid !== i && !mDone(S.run.mid)) { if (!S.stash) S.stash = {}; S.stash[S.run.mid] = S.run; S.run = null; }
+  if (!S.run || S.run.mid !== i) { S.run = (S.stash && S.stash[i]) || { mid: i, ai: 0, data: {}, phase: "play" }; if (S.stash) delete S.stash[i]; save(); }
+  renderMission(); show("scr-mission");
+}
+function runData(ai) { const r = S.run; if (!r.data[ai]) r.data[ai] = {}; return r.data[ai]; }
+function renderMission() {
+  const m = MISSIONS[curMid];
+  $("#bitMission").innerHTML = bitSVG();
+  $("#mCrumb").textContent = "Mission " + (curMid + 1) + " of 10 · Stage 1";
+  $("#mTitle").textContent = m.title;
+  $("#mBadge").innerHTML = '<span class="badge' + (m.badge === "big" ? " big" : "") + '">' + (m.badge === "big" ? "💻 Big-screen session" : "📱 Phone-fine") + '</span>';
+  $("#mBigNote").innerHTML = m.badge === "big" ? '<div class="card goldy" style="font-weight:700;font-size:14.5px;line-height:1.45">💻 This mission is best on a <b>tab or laptop with a real keyboard</b>. No big screen nearby? You can still finish it right here with the on-screen keyboard below.</div>' : "";
+  $("#mNote").textContent = pendingNote; pendingNote = "";
+  $("#mFoot").innerHTML = "";
+  const body = $("#mBody");
+  if (S.run.phase === "finish") { renderFinish(m); return; }
+  const ai = S.run.ai, act = m.acts[ai];
+  $("#mBubble").textContent = ai === 0 ? m.story : actBubble(act);
+  if (act.t === "quiz") renderQuiz(body, act, ai);
+  else if (act.t === "tap") renderTap(body, act, ai);
+  else if (act.t === "teach") renderTeach(body, act, ai);
+  else if (act.t === "sort") renderSort(body, act, ai);
+  else if (act.t === "order") renderOrder(body, act, ai);
+  else if (act.t === "keys") renderKeys(body, act, ai);
+}
+function actBubble(act) {
+  if (act.t === "quiz") return "Answer Bit's questions. Take your time — thinking is the game!";
+  if (act.t === "tap") return "Tap the parts on the Machine picture, one by one.";
+  if (act.t === "teach") return "Bit will share an idea. If it is true, cheer him on! If it needs fixing, tap the true job card.";
+  if (act.t === "sort") return "Sorting time! Tap a card, then tap where it belongs.";
+  if (act.t === "order") return "Steps love their order. Tap them in the order they happen.";
+  if (act.t === "keys") return "Bit will call out a key. Find it on the keyboard and tap it!";
+  return "";
+}
+function actDone() {
+  S.run.ai++;
+  if (S.run.ai >= MISSIONS[curMid].acts.length) S.run.phase = "finish";
+  save(); renderMission();
+}
+function renderFinish(m) {
+  $("#mBubble").textContent = "You did it, Sreshta! Every step — done by you.";
+  $("#mBody").innerHTML = '<div class="card goldy" style="text-align:center"><div class="starBig">⭐</div><b class="baloo" style="font-size:20px">Star Moment!</b><div style="font-weight:700;font-size:15px;margin:6px 0">You finished “' + esc(m.title) + '”.</div></div>'
+    + '<div class="card"><b class="baloo" style="color:var(--ink2)">🏠 Show on your real machine</b><div style="font-weight:700;font-size:14.5px;margin-top:4px;line-height:1.45">' + esc(m.real) + '</div></div>';
+  $("#mFoot").innerHTML = '<button class="btn gold" onclick="finishMission()">⭐ Finish Mission</button>';
+}
+function finishMission() {
+  if (!mDone(curMid)) { S.missions[curMid] = { done: true, date: todayStr(), stars: 1 }; }
+  S.run = null; save(); goHome();
+}
+/* ---- quiz ---- */
+function renderQuiz(body, act, ai) {
+  const d = runData(ai); if (d.qi === undefined) d.qi = 0;
+  if (d.qi >= act.qs.length) { actDone(); return; }
+  const q = act.qs[d.qi];
+  body.innerHTML = '<div class="card"><b class="baloo" style="font-size:17px;color:var(--ink2)">' + esc(q.q) + '</b><div id="qOpts"></div><div style="font-size:12.5px;font-weight:800;color:var(--soft);margin-top:4px">Question ' + (d.qi + 1) + " of " + act.qs.length + "</div></div>";
+  const host = $("#qOpts", body);
+  q.opts.forEach((o, oi) => {
+    const b = document.createElement("button"); b.className = "opt"; b.textContent = o;
+    b.onclick = () => {
+      if (oi === q.a) { d.qi++; save(); pendingNote = "Yes! Well thought, Sreshta."; renderMission(); }
+      else { $("#mNote").textContent = "Good thinking! Look at the question once more and try another card."; }
+    };
+    host.appendChild(b);
+  });
+}
+/* ---- tap the part ---- */
+function renderTap(body, act, ai) {
+  const d = runData(ai); if (d.ti === undefined) d.ti = 0;
+  if (d.ti >= act.targets.length) { actDone(); return; }
+  const part = act.targets[d.ti];
+  body.innerHTML = '<div class="machWrap" id="tapMach"></div>';
+  const host = $("#tapMach", body);
+  host.innerHTML = machineHotspots("desk");
+  act.targets.slice(0, d.ti).forEach(p => { const g = host.querySelector('.hs[data-part="' + p + '"]'); if (g) g.classList.add("found"); });
+  const g = host.querySelector('.hs[data-part="' + part + '"]'); if (g) g.classList.add("ask");
+  $("#mNote").textContent = "Bit asks: tap the " + PART_INFO[part].label.toUpperCase() + " — it " + PART_INFO[part].job + ".";
+  host.onclick = (ev) => {
+    const gg = ev.target.closest("[data-part]"); if (!gg) return;
+    const p = gg.getAttribute("data-part");
+    if (p === part) { d.ti++; save(); pendingNote = "Yes! That is the " + PART_INFO[part].label + "!"; renderMission(); }
+    else { const li = PART_INFO[p]; $("#mNote").textContent = "That is the " + (li ? li.label : "another part") + ". Bit is looking for the " + PART_INFO[part].label + " — it " + PART_INFO[part].job + "."; }
+  };
+}
+/* ---- teach Bit (his guesses) ---- */
+const FIX_POOL = ["It types letters and numbers.", "It shows pictures and words.", "It makes sounds and music.", "It turns the machine on.", "It keeps files in tidy order.", "It holds the brain chip safely inside."];
+function renderTeach(body, act, ai) {
+  const d = runData(ai); if (d.ri === undefined) d.ri = 0;
+  if (d.ri >= act.rounds.length) { actDone(); return; }
+  const r = act.rounds[d.ri];
+  body.innerHTML = '<div class="card" style="text-align:center"><div style="font-size:52px">' + r.icon + '</div><b class="baloo" style="font-size:19px;color:var(--ink2)">' + esc(r.name) + ' says:</b><div style="font-family:\'Baloo 2\';font-size:18px;margin:6px 0">“' + esc(r.claim) + '”</div><div style="font-size:12.5px;font-weight:800;color:var(--soft)">Is the claim true? Round ' + (d.ri + 1) + " of " + act.rounds.length + "</div></div><div id='tchOpts'></div>";
+  const host = $("#tchOpts", body);
+  const yes = document.createElement("button"); yes.className = "opt"; yes.textContent = "👍 Yes Bit! That is true."; yes.onclick = () => teachPick(r, r.isTrue); host.appendChild(yes);
+  if (!r.isTrue) {
+    const others = FIX_POOL.filter(x => x !== r.fix && x !== r.claim).slice(d.ri, d.ri + 2);
+    const cards = [{ t: r.fix, ok: true }].concat(others.map(x => ({ t: x, ok: false })));
+    if (d.ri % 2 === 1) cards.reverse();
+    cards.forEach(c => { const b = document.createElement("button"); b.className = "opt"; b.textContent = "🛠️ " + c.t; b.onclick = () => teachPick(r, c.ok); host.appendChild(b); });
+  }
+}
+function teachPick(r, ok) {
+  if (ok) { const ai = S.run.ai; runData(ai).ri++; save(); pendingNote = r.isTrue ? "Bit beams: “Thank you for cheering me on!”" : "Bit nods: “Oh, I see! Thank you for teaching me.”"; renderMission(); }
+  else { $("#mNote").textContent = "Bit tilts his head: “Hmm, let us look at the claim once more, together.”"; }
+}
+/* ---- sorting ---- */
+function renderSort(body, act, ai) {
+  const d = runData(ai); if (!d.placed) d.placed = {}; if (d.sel === undefined) d.sel = null;
+  const left = act.items.filter(it => !d.placed[it.id]);
+  if (!left.length) { actDone(); return; }
+  let h = '<div class="card"><b class="baloo" style="font-size:16.5px;color:var(--ink2)">' + esc(act.prompt) + '</b><div id="sortTray" style="margin-top:8px;text-align:center">';
+  left.forEach(it => { h += '<button class="sortItem' + (d.sel === it.id ? " sel" : "") + '" data-item="' + it.id + '">' + esc(it.label) + "</button>"; });
+  h += "</div></div>";
+  act.bins.forEach(bn => {
+    const inside = act.items.filter(it => d.placed[it.id] === bn.id);
+    h += '<div class="bin" data-bin="' + bn.id + '"><span class="bt">' + esc(bn.label) + "</span>" + (inside.length ? '<div class="in">' + inside.map(it => esc(it.label)).join(" · ") + "</div>" : '<div class="in">Empty — tap here after choosing a card</div>') + "</div>";
+  });
+  body.innerHTML = h;
+  $$(".sortItem", body).forEach(el => el.onclick = () => { d.sel = el.getAttribute("data-item"); save(); renderMission(); });
+  $$(".bin", body).forEach(el => el.onclick = () => {
+    if (!d.sel) { $("#mNote").textContent = "First tap a card above, then tap its home."; return; }
+    const it = act.items.find(x => x.id === d.sel);
+    if (it.bin === el.getAttribute("data-bin")) { d.placed[it.id] = it.bin; d.sel = null; save(); pendingNote = "Tidy! That card is home."; renderMission(); }
+    else { $("#mNote").textContent = "Good try! Look at the card's picture once more — which home keeps things like that?"; }
+  });
+}
+/* ---- order steps ---- */
+function renderOrder(body, act, ai) {
+  const d = runData(ai); if (d.next === undefined) d.next = 0;
+  if (d.next >= act.steps.length) { actDone(); return; }
+  const perm = [2, 0, 3, 1].slice(0, act.steps.length);
+  let h = '<div class="card"><b class="baloo" style="font-size:16.5px;color:var(--ink2)">' + esc(act.prompt) + '</b><div id="ordPlaced" style="margin:10px 0">';
+  for (let k = 0; k < d.next; k++) h += '<div class="stepCard placed">✔ Step ' + (k + 1) + ": " + esc(act.steps[k]) + "</div>";
+  h += '</div><div id="ordPool">';
+  perm.forEach(origIx => { if (origIx >= d.next) h += '<button class="stepCard" data-ix="' + origIx + '">' + esc(act.steps[origIx]) + "</button>"; });
+  h += "</div></div>";
+  body.innerHTML = h;
+  $$(".stepCard[data-ix]", body).forEach(el => el.onclick = () => {
+    const ix = parseInt(el.getAttribute("data-ix"), 10);
+    if (ix === d.next) { d.next++; save(); pendingNote = "Yes! That step clicks into place."; renderMission(); }
+    else { $("#mNote").textContent = "That step comes a little later. Think — what happens " + (d.next === 0 ? "very first?" : "next?"); }
+  });
+}
+/* ---- keyboard ---- */
+const KB_ROWS = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+function renderKeys(body, act, ai) {
+  const d = runData(ai); if (d.ki === undefined) d.ki = 0;
+  if (d.ki >= act.seq.length) { actDone(); return; }
+  const target = act.seq[d.ki];
+  let h = '<div class="card"><div style="text-align:center;font-weight:800;color:var(--soft);font-size:13px">KEY ' + (d.ki + 1) + " of " + act.seq.length + '</div><div style="text-align:center;font-family:\'Baloo 2\';font-size:21px;color:var(--ink2);margin:4px 0 10px">Bit calls: tap the <span style="color:var(--sky)">' + (target === "Space" ? "SPACE BAR" : target === "Enter" ? "ENTER KEY" : "“" + target + "” KEY") + "</span></div>";
+  KB_ROWS.forEach(row => { h += '<div class="kbRow">' + row.split("").map(ch => '<button class="kbKey" data-k="' + ch + '">' + ch + "</button>").join("") + "</div>"; });
+  h += '<div class="kbRow"><button class="kbKey wide" data-k="Enter">Enter ⏎</button><button class="kbKey wide" data-k="Space">Space</button></div></div>';
+  body.innerHTML = h;
+  $$(".kbKey", body).forEach(el => el.onclick = () => {
+    const k = el.getAttribute("data-k");
+    if (k === target) { d.ki++; save(); pendingNote = "Found it! Your fingers are learning the keyboard map."; renderMission(); }
+    else { $("#mNote").textContent = "That is the " + k + " key. Bit called for " + target + " — scan the rows once more!"; }
+  });
+}
+
+/* ================= dashboard ================= */
+function renderDash() {}
+function dashGo(view) {
+  ["overview", "history", "map", "controls"].forEach(v => { const b = $("#dn-" + v); if (b) b.classList.toggle("on", v === view); });
+  const body = $("#dashBody");
+  if (view === "overview") {
+    body.innerHTML = '<div class="grid3"><div class="stat"><div class="n">⭐ ' + stars() + '</div><div class="l">STARS</div></div><div class="stat"><div class="n" style="font-size:16px">' + titleFor(stars()) + '</div><div class="l">ROOM TITLE</div></div><div class="stat"><div class="n">' + stars() + ' / 10</div><div class="l">MISSIONS DONE</div></div></div>'
+      + '<div class="card"><b class="baloo" style="color:var(--ink2)">First Steps — Show Bit the Machine</b><div style="font-weight:700;font-size:14.5px;margin-top:4px">' + (S.baseline ? "Complete — done on " + esc(S.baseline.date || "") + ". Kept through any reset." : "Not done yet. It opens Mission 1.") + '</div></div>'
+      + '<div class="card"><b class="baloo" style="color:var(--ink2)">Next Reward</b><div style="font-weight:700;font-size:14.5px;margin-top:4px">' + (S.reward ? esc(S.reward) : "Not set yet — add one in Controls.") + '</div></div>'
+      + '<div class="card"><b class="baloo" style="color:var(--ink2)">About this room</b><div style="font-weight:700;font-size:14.5px;margin-top:4px;line-height:1.5">Stage 1 (Meet the Machine) is fully playable in this sample. Stage 2 (The Connected Machine) is listed as a preview. Titles in this room: Machine Friend → Part Finder → Computer Guide, across the full 20 missions.</div></div>';
+  } else if (view === "history") {
+    let h = '<div class="hrow"><span>⭐ First Steps — Show Bit the Machine</span><span class="hd">' + (S.baseline ? "Done · " + esc(S.baseline.date || "") : "Not yet") + "</span></div>";
+    MISSIONS.forEach((m, i) => { const d = S.missions[i]; h += '<div class="hrow"><span>' + (i + 1) + ". " + esc(m.title) + "</span><span class='hd'>" + (d && d.done ? "⭐ Done · " + esc(d.date || "") : (mUnlocked(i) ? "Open" : "Locked")) + "</span></div>"; });
+    body.innerHTML = h;
+  } else if (view === "map") {
+    const lit = { screen: mDone(0) || mDone(3), keyboard: mDone(0) || mDone(5), mouse: mDone(0) || mDone(4), tower: mDone(1), chip: mDone(1) || mDone(2), power: mDone(3), speaker: mDone(3), folder: mDone(7) || mDone(8) };
+    body.innerHTML = '<div class="card"><b class="baloo" style="color:var(--ink2)">The Machine Map</b><div style="font-weight:700;font-size:14.5px;margin:4px 0;line-height:1.5">Parts glow gold as their missions are completed. A quiet picture of everything she has taught Bit so far.</div></div><div class="machWrap">' + machineSVG("desk", lit) + "</div>"
+      + '<div class="card" style="font-weight:700;font-size:14px;line-height:1.6">' + Object.keys(PART_INFO).filter(p => p !== "tablet").map(p => (lit[p] ? "🌟 " : "▫️ ") + PART_INFO[p].label + " — " + (lit[p] ? "lit up" : "still to come")).join("<br>") + "</div>";
+  } else if (view === "controls") {
+    body.innerHTML = '<div class="card"><b class="baloo" style="color:var(--ink2)">Next Reward</b><div style="font-weight:700;font-size:14px;margin:4px 0">A real-life reward a parent gives when she reaches it. She can see it in her room one day — set it kindly.</div><input class="txtin" id="rewardIn" maxlength="60" placeholder="e.g. A trip to the park" value="' + esc(S.reward || "") + '"><button class="btn" onclick="saveReward()">Save Reward</button><div class="note" id="rwNote"></div></div>'
+      + '<div class="card"><b class="baloo" style="color:#B45309">Reset the Room</b><div style="font-weight:700;font-size:14px;margin:4px 0;line-height:1.5">Clears mission stars, any half-finished mission, and the reward. <b>Kept forever:</b> the First Steps baseline (Show Bit the Machine).</div><button class="btn gold" id="resetBtn" onclick="armReset()">Reset Missions</button><div class="note" id="rsNote"></div></div>';
+  }
+}
+function saveReward() { const v = $("#rewardIn").value.trim(); S.reward = v; save(); const n = $("#rwNote"); if (n) n.textContent = "Saved."; }
+function armReset() {
+  const b = $("#resetBtn");
+  if (b.dataset.armed === "1") {
+    S.missions = {}; S.run = null; S.stash = {}; S.reward = ""; save();
+    $("#rsNote").textContent = "Room reset. First Steps kept, as promised.";
+    b.dataset.armed = ""; b.textContent = "Reset Missions";
+  } else { b.dataset.armed = "1"; b.textContent = "Tap again to be sure"; $("#rsNote").textContent = "One more tap resets the missions."; }
+}
+
+/* ================= boot ================= */
+$("#bitAccess").innerHTML = bitSVG();
+$("#accessMach").innerHTML = machineSVG("desk");
+show("scr-access");
+</script>
+</body>
+</html>
